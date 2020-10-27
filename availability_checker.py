@@ -9,12 +9,16 @@ def check_calendar():
     r = requests.get(url)
     json_data = json.loads(r.text)
     days = json_data['days']
-
+    
+    found_date = False 
     for date in days:
         if date['status'] != 'unavailable':
+            found_date = True
             send_email(date['date'], date['spots'])
-        else:
-            send_email('nothing available', 'checkback tomorrow')
+            break
+            
+    if not found_date:
+        send_email('nothing available', 'checkback tomorrow')
 
 def send_email(date, spots):
     sender = '' # ADD GMAIL ACCOUNT HERE
